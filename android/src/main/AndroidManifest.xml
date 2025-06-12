@@ -1,0 +1,18 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.ezride.flutter_bg_location_plugin">
+  <application>
+        <!-- Foreground Service для фонового трекинга -->
+        <service
+            android:name="com.ezride.flutter_bg_location_plugin.LocationUpdatesService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <!-- Ресивер для передачи локаций через broadcast -->
+        <receiver android:name="com.ezride.flutter_bg_location_plugin.LocationBroadcastReceiver"
+                  android:exported="false">
+            <intent-filter>
+                <action android:name="com.ezride.bg_flutter_location_plugin.ACTION_LOCATION" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
