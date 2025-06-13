@@ -1,4 +1,4 @@
-package com.ezride.flutter_bg_location_plugin
+package com.ezride.flutter_bg_location_plugin.services
 
 import android.content.BroadcastReceiver
 import android.content.Context

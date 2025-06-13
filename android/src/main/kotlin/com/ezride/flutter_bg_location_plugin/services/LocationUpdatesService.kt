@@ -1,4 +1,4 @@
-package com.ezride.flutter_bg_location_plugin
+package com.ezride.flutter_bg_location_plugin.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -33,19 +33,28 @@ class LocationUpdatesService : Service() {
             if (loc != null) Log.d("LocationService", "LastLocation: $loc")
                 else Log.d("LocationService", "LastLocation == null")
             }
+        val serviceContext = this;
+        val locationStorage = LocationStorage(serviceContext);
+
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
-                for (location in result.locations) {
-                    Log.d("LocationService", "Lat: ${location.latitude}, Lng: ${location.longitude}")
-                    notificationManager.notify(notificationId, buildNotification(location))
 
-                    // Отправляем broadcast с координатами
-                    Intent().also { intent ->
+                val lastTickers =  locationStorage.getTickers();
+                if(lastTickers<=0){
+                    LocationService.stopTracking(serviceContext);
+                    return;
+                }
+                val location = result.lastLocation ?: return
+                Log.d("LocationService", "Lat: ${location.latitude}, Lng: ${location.longitude}");
+                val hash = locationStorage.getHash()?:"";
+                HttpService.sendLocation(location.latitude, location.longitude,hash);
+                locationStorage.declineOneTickers();
+                notificationManager.notify(notificationId, buildNotification(location));
+                Intent().also { intent ->
                         intent.action = ACTION_LOCATION
                         intent.putExtra(EXTRA_LAT, location.latitude)
                         intent.putExtra(EXTRA_LNG, location.longitude)
                         sendBroadcast(intent)
-                    }
                 }
             }
         }

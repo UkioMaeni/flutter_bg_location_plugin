@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bg_location_plugin/flutter_bg_location_plugin.dart';
+import 'package:flutter_bg_location_plugin/models/traking_options.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  bool _platformVersion = false;
   final _flutterBgLocationPlugin = FlutterBgLocationPlugin();
 
   @override
@@ -31,14 +32,14 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     await Permission.location.request();
     await Permission.notification.request();
-    String platformVersion;
+    bool platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
       platformVersion =
-          await _flutterBgLocationPlugin.getPlatformVersion() ?? 'Unknown platform version';
+          await _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 30, hash: "sdad"));
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      platformVersion = false;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -62,11 +63,10 @@ class _MyAppState extends State<MyApp> {
           children: [
             Center(
               child: Text('Running on: $_platformVersion\n'),
-              
             ),
             GestureDetector(
               onTap: () {
-                _flutterBgLocationPlugin.stopTrack();
+                _flutterBgLocationPlugin.stopTracking();
               },
               child: Container(
                 height: 40,

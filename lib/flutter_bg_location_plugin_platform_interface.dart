@@ -1,3 +1,4 @@
+import 'package:flutter_bg_location_plugin/models/traking_options.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_bg_location_plugin_method_channel.dart';
@@ -23,10 +24,10 @@ abstract class FlutterBgLocationPluginPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
+  Future<bool?> startTracking(TrackingOptions trackingOptions) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
-  Future<String?> stopTrack() {
+  Future<bool?> stopTracking() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bg_location_plugin/models/traking_options.dart';
 
 import 'flutter_bg_location_plugin_platform_interface.dart';
 
@@ -10,13 +11,16 @@ class MethodChannelFlutterBgLocationPlugin extends FlutterBgLocationPluginPlatfo
   final methodChannel = const MethodChannel('flutter_bg_location_plugin');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod('startTracking');
-    return version;
+  Future<bool?> startTracking(TrackingOptions trackingOptions) async {
+    final result = await methodChannel.invokeMethod<bool>('startTracking',{
+      "seconds":trackingOptions.seconds,
+      "hash":trackingOptions.hash,
+    });
+    return result;
   }
   @override
-  Future<String?> stopTrack() async {
-    final version = await methodChannel.invokeMethod('stopTracking');
-    return version;
+  Future<bool?> stopTracking() async {
+    final result = await methodChannel.invokeMethod<bool>('stopTracking');
+    return result;
   }
 }

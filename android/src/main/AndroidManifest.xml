@@ -3,15 +3,15 @@
   <application>
         <!-- Foreground Service для фонового трекинга -->
         <service
-            android:name="com.ezride.flutter_bg_location_plugin.LocationUpdatesService"
+            android:name="com.ezride.flutter_bg_location_plugin.services.LocationUpdatesService"
             android:exported="false"
             android:foregroundServiceType="location" />
 
         <!-- Ресивер для передачи локаций через broadcast -->
-        <receiver android:name="com.ezride.flutter_bg_location_plugin.LocationBroadcastReceiver"
+        <receiver android:name="com.ezride.flutter_bg_location_plugin.services.LocationBroadcastReceiver"
                   android:exported="false">
             <intent-filter>
-                <action android:name="com.ezride.bg_flutter_location_plugin.ACTION_LOCATION" />
+                <action android:name="com.ezride.bg_flutter_location_plugin.services.ACTION_LOCATION" />
             </intent-filter>
         </receiver>
     </application>

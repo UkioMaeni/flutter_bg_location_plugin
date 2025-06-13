@@ -1,3 +1,5 @@
+package com.ezride.flutter_bg_location_plugin.services
+
 import android.content.Context
 import android.content.SharedPreferences
 
@@ -45,7 +47,7 @@ class LocationStorage(context: Context) {
 
     //////////////Подвязка тикера локации к данным
     // запрос айди 
-    fun getTickerId(): String? = prefs.getInt(KEY_TICKER_ID, 0);
+    fun getTickerId(): String? = prefs.getString(KEY_TICKER_ID, "");
     //сохранение айди тикера
     fun setTickerId(tickerId : String) {
         prefs.edit().putString(KEY_TICKER_ID, tickerId).apply()

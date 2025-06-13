@@ -11,56 +11,58 @@ import com.google.android.gms.location.LocationResult
 import android.util.Log
 import android.app.ActivityManager
 import com.ezride.flutter_bg_location_plugin.handlers.*
+import com.ezride.flutter_bg_location_plugin.services.LocationBroadcastReceiver
 /** FlutterBgLocationPlugin */
 
 class FlutterBgLocationPlugin: FlutterPlugin, MethodChannel.MethodCallHandler{
     private lateinit var context: Context
     private lateinit var methodChannel: MethodChannel
 
-    private val handlers: List<MethodHandler> = listOf(
+    private val handlers: List<Handler> = listOf(
         StartTrackingHandler(),
+        StopTrackingHandler()
     )
 
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        context = binding.applicationContext
-        LocationBroadcastReceiver.register(context) { loc ->
-            Log.d("location","POOL")
-        }
+        context = binding.applicationContext;
         methodChannel = MethodChannel(binding.binaryMessenger, "flutter_bg_location_plugin")
         methodChannel.setMethodCallHandler(this)
+        LocationBroadcastReceiver.register(context) { _ ->
+            Log.d("location","POOL")
+        }
         
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 
         handlers.find { it.callMethod == call.method }
-            ?.handle(context, call, result)
+            ?.handler(context, call, result)
             ?: result.notImplemented()
 
-        when (call.method) {
-            "startTracking" -> {
-                Log.d("FlutterLocationPlugin", "startTracking invoked")
-                if (!isServiceRunning(LocationUpdatesService::class.java)) {
-                    val serviceIntent = Intent(context, LocationUpdatesService::class.java)
-                    context.startForegroundService(serviceIntent)
-                } else {
-                    Log.d("FlutterLocationPlugin", "Service already running")
-                }
-                result.success(null)
-            }
-            "stopTracking" -> {
-                Log.d("FlutterLocationPlugin", "stopTracking invoked")
-                if (isServiceRunning(LocationUpdatesService::class.java)) {
-                    val serviceIntent = Intent(context, LocationUpdatesService::class.java)
-                    context.stopService(serviceIntent)
-                } else {
-                    Log.d("FlutterLocationPlugin", "Service not running")
-                }
-                result.success(null)
-            }
-            else -> result.notImplemented()
-        }
+        // when (call.method) {
+        //     "startTracking" -> {
+        //         Log.d("FlutterLocationPlugin", "startTracking invoked")
+        //         if (!isServiceRunning(LocationUpdatesService::class.java)) {
+        //             val serviceIntent = Intent(context, LocationUpdatesService::class.java)
+        //             context.startForegroundService(serviceIntent)
+        //         } else {
+        //             Log.d("FlutterLocationPlugin", "Service already running")
+        //         }
+        //         result.success(null)
+        //     }
+        //     "stopTracking" -> {
+        //         Log.d("FlutterLocationPlugin", "stopTracking invoked")
+        //         if (isServiceRunning(LocationUpdatesService::class.java)) {
+        //             val serviceIntent = Intent(context, LocationUpdatesService::class.java)
+        //             context.stopService(serviceIntent)
+        //         } else {
+        //             Log.d("FlutterLocationPlugin", "Service not running")
+        //         }
+        //         result.success(null)
+        //     }
+        //     else -> result.notImplemented()
+        // }
     }
 
 

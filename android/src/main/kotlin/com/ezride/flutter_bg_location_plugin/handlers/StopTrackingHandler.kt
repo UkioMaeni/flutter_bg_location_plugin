@@ -6,22 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.ezride.flutter_bg_location_plugin.services.LocationService
-import com.ezride.flutter_bg_location_plugin.service.LocationUpdatesService
 
 class StopTrackingHandler : Handler{
 
     override val callMethod : String ="stopTracking";
 
-    override fun handle(context: Context, call: MethodCall, result: MethodChannel.Result){
-        Log.d("FlutterLocationPlugin", "stopTracking invoked")
-        if (LocationUpdatesService(LocationUpdatesService::class.java)) {
-            val serviceIntent = Intent(context, LocationUpdatesService::class.java)
-            context.stopService(serviceIntent)
-            result.success(true)
-        } else {
-            Log.d("FlutterLocationPlugin", "Service not running")
-            result.success(false)
-        }
-        
+    override fun handler(context: Context, call: MethodCall, result: MethodChannel.Result){
+        Log.d("FlutterLocationPlugin", "stopTracking invoked");
+        val isStoped =  LocationService.stopTracking(context);
+        result.success(isStoped);
     }
 }
