@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -8,6 +10,7 @@ import 'package:flutter_bg_location_plugin/models/traking_options.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -32,6 +35,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     await Permission.location.request();
     await Permission.notification.request();
+    return;
     bool platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
@@ -64,6 +68,19 @@ class _MyAppState extends State<MyApp> {
             Center(
               child: Text('Running on: $_platformVersion\n'),
             ),
+            GestureDetector(
+              onTap: () {
+                log("start");
+                _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 300, hash: ""));
+              },
+              child: Container(
+                height: 40,
+                width: 50,
+                color: Colors.amber,
+                child: Text("startTracking"),
+              ),
+            ),
+            SizedBox(height: 20,),
             GestureDetector(
               onTap: () {
                 _flutterBgLocationPlugin.stopTracking();
