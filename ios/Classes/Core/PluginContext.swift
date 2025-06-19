@@ -2,10 +2,12 @@ import  Flutter
 
 final class PluginContext {
     static let shared = PluginContext()        
-    private init() {}
+    private init() {
+
+    }
 
     // всё, что нужно хендлерам
-    let locationService = LocationService()
+    lazy var locationService = LocationService(context: self)
     let locationStorage = LocationStorage.shared
     var channel: FlutterMethodChannel!
 

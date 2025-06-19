@@ -3,8 +3,9 @@ import CoreLocation
 /// Сервис локации
 class LocationService: NSObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
-    private let ctx = PluginContext.shared;
-    override init() {
+    private unowned let ctx: PluginContext 
+    init(context: PluginContext) {
+        self.ctx = context
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest

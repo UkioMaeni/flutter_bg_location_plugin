@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
             GestureDetector(
               onTap: () {
                 log("start");
-                _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 300, hash: "asdasd",orderId: 145));
+                _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 30, hash: "asdasd",orderId: 145));
               },
               child: Container(
                 height: 40,
