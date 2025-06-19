@@ -22,6 +22,6 @@ public class FlutterBgLocationPlugin: NSObject, FlutterPlugin {
     }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult){
-    PluginContext.shared.handleMethodCall(call,result)
+    PluginContext.shared.handleMethodCall(call,result:result)
   }
 }
