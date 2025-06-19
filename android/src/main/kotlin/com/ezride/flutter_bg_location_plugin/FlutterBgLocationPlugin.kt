@@ -12,6 +12,8 @@ import android.util.Log
 import android.app.ActivityManager
 import com.ezride.flutter_bg_location_plugin.handlers.*
 import com.ezride.flutter_bg_location_plugin.services.LocationBroadcastReceiver
+
+
 /** FlutterBgLocationPlugin */
 
 class FlutterBgLocationPlugin: FlutterPlugin, MethodChannel.MethodCallHandler{
