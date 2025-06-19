@@ -7,7 +7,7 @@ final class StopTrackingHandler: Handler {
     func handler(call: FlutterMethodCall, result: @escaping FlutterResult) {
         print("FlutterLocationPlugin", "stopTracking invoked")
 
-        val isStoped =  PluginContext.shared.locationService.stopTracking()
+        let isStoped =  PluginContext.shared.locationService.stopTracking()
         result(isStoped)
     }
 }

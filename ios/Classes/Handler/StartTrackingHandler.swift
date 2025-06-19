@@ -12,7 +12,7 @@ final class StartTrackingHandler: Handler {
         let hash = args?["hash"] as? String ?? "";
         let orderId = args?["orderId"] as? String ?? "";
   
-        val isStarted = PluginContext.shared.locationService.startTracking(seconds, hash, orderId)       
+        let isStarted = PluginContext.shared.locationService.startTracking(seconds, hash, orderId)       
         result(isStarted)
     }
 }

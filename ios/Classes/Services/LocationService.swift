@@ -22,8 +22,8 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         manager.startUpdatingLocation();
         isRunning = true;
 
-        val locationStorage =  ctx.locationStorage;
-        val tickerSeconds = locationStorage.getTickerSeconds();
+        let locationStorage =  ctx.locationStorage;
+        let tickerSeconds = locationStorage.getTickerSeconds();
 
         tick();
         DispatchQueue.main.async {
@@ -44,8 +44,8 @@ class LocationService: NSObject, CLLocationManagerDelegate {
 
     private func tick() {
 
-        val locationStorage =  ctx.locationStorage;
-        val lastTickers = locationStorage.getTickers();
+        let locationStorage =  ctx.locationStorage;
+        let lastTickers = locationStorage.getTickers();
         if(lastTickers<=0){
             self?.stop();
             return;
@@ -69,9 +69,9 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             print("LocationService already running")
             return false
         }
-        val locationStorage =  PluginContext.shared.locationStorage;
-        val tickerSeconds =  locationStorage.getTickerSeconds(); //раз в сколько секунд будет происходить тик. 
-        val tickerCount = seconds/tickerSeconds;
+        let locationStorage =  PluginContext.shared.locationStorage;
+        let tickerSeconds =  locationStorage.getTickerSeconds(); //раз в сколько секунд будет происходить тик. 
+        let tickerCount = seconds/tickerSeconds;
 
         locationStorage.setTickers(tickerCount);
         locationStorage.setHash(hash);
