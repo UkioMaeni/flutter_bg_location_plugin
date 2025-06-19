@@ -1,9 +1,3 @@
-//
-//  LocationService.swift
-//  
-//
-//  Created by Gost on 16.06.2025.
-//
 
 import CoreLocation
 

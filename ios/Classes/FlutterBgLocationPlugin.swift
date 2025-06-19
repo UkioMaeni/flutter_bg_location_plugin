@@ -5,22 +5,22 @@ import AudioToolbox
 @objc(FlutterBgLocationPlugin)
 public class FlutterBgLocationPlugin: NSObject, FlutterPlugin {
     
-    private let service = LocationService()
-    private var channel: FlutterMethodChannel
     
     @objc public static func register(with registrar: FlutterPluginRegistrar) {
       print("🔌 FlutterBgLocationPlugin.register called")
-        let channel = FlutterMethodChannel(name: "flutter_bg_location_plugin", binaryMessenger: registrar.messenger())
-        let instance = FlutterBgLocationPlugin(channel: channel)
+        let ctx = PluginContext.shared;
+        ctx.channel = FlutterMethodChannel(name: "flutter_bg_location_plugin", binaryMessenger: registrar.messenger())
+        registrar.addMethodCallDelegate(instance, channel: ctx.channel)
+        // let instance = FlutterBgLocationPlugin(channel: channel)
         
-        registrar.addMethodCallDelegate(instance, channel: channel)
         
-        instance.service.onLocation = { lat, lng in
-            print("lat");
-            print(lat);
-            print("📍 background location: \(lat), \(lng)")
-            //instance.channel.invokeMethod("onLocation", arguments: ["lat": lat, "lng": lng])
-        }
+        
+        // instance.service.onLocation = { lat, lng in
+        //     print("lat");
+        //     print(lat);
+        //     print("📍 background location: \(lat), \(lng)")
+        //     //instance.channel.invokeMethod("onLocation", arguments: ["lat": lat, "lng": lng])
+        // }
         
   }
     init(channel : FlutterMethodChannel) {

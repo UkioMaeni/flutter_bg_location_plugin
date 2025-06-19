@@ -18,7 +18,7 @@ class StartTrackingHandler : Handler{
         val args = call.arguments as? Map<*, *>
         val seconds = (args?.get("seconds") as? Int) ?: 0;
         val hash = (args?.get("hash") as? String) ?: "";
-
+        val orderId = (args?.get("orderId") as? String) ?: "";
         val isStarted =  LocationService.startTracking(context,seconds,hash);
         result.success(isStarted);
 
