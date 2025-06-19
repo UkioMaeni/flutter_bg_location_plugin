@@ -1,6 +1,5 @@
 import Flutter
 import UIKit
-import AudioToolbox
 
 @objc(FlutterBgLocationPlugin)
 public class FlutterBgLocationPlugin: NSObject, FlutterPlugin {
@@ -14,7 +13,7 @@ public class FlutterBgLocationPlugin: NSObject, FlutterPlugin {
         let instance = FlutterBgLocationPlugin(channel: channel)
         registrar.addMethodCallDelegate(instance, channel: channel) 
    }
-   
+
   private let channel: FlutterMethodChannel
 
    @objc public init(channel: FlutterMethodChannel) {
