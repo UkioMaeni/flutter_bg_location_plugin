@@ -20,10 +20,7 @@ class FlutterBgLocationPlugin: FlutterPlugin, MethodChannel.MethodCallHandler{
     private lateinit var context: Context
     private lateinit var methodChannel: MethodChannel
 
-    private val handlers: List<Handler> = listOf(
-        StartTrackingHandler(),
-        StopTrackingHandler()
-    )
+    
 
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -36,6 +33,11 @@ class FlutterBgLocationPlugin: FlutterPlugin, MethodChannel.MethodCallHandler{
         
     }
 
+    private val handlers: List<Handler> = listOf(
+        StartTrackingHandler(),
+        StopTrackingHandler()
+    )
+    
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 
         handlers.find { it.callMethod == call.method }

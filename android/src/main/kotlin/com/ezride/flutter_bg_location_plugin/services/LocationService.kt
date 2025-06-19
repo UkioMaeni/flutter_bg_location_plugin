@@ -16,16 +16,17 @@ object LocationService{
         return false
     }
 
-    fun startTracking(context: Context,seconds: Int,hash: String): Boolean{
+    fun startTracking(context: Context,seconds: Int,hash: String,orderId: String): Boolean{
         if(isServiceRunning(LocationUpdatesService::class.java,context)){
             Log.d("FlutterLocationPlugin", "Service already running");
             return false;
         }
         val locationStorage =  LocationStorage(context);
         val tickerSeconds =  locationStorage.getTickerSeconds();
-        val tickerCount = seconds/tickerSeconds;
+        val tickerCount = seconds/tickerSeconds;    //раз в сколько секунд будет происходить тик. 
         locationStorage.setTickers(tickerCount);
         locationStorage.setHash(hash);
+        locationStorage.setOrderId(orderId);
         val serviceIntent = Intent(context, LocationUpdatesService::class.java)
         context.startForegroundService(serviceIntent)
 

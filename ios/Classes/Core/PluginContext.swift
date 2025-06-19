@@ -6,6 +6,19 @@ final class PluginContext {
 
     // всё, что нужно хендлерам
     let locationService = LocationService()
-    let storage = LocationStorage()
+    let locationStorage = LocationStorage()
     var channel: FlutterMethodChannel!
+
+    var handlers: [Handler] = [
+        StartTrackingHandler(),
+        StopTrackingHandler()
+    ]
+
+    func handleMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let handler = handlers.first(where: { $0.callMethod == call.method }) {
+            handler.handle(context: self, call: call, result: result)
+        } else {
+            result(FlutterMethodNotImplemented)
+        }
+    }
 }

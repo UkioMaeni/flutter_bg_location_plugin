@@ -1,66 +1,93 @@
-
 import CoreLocation
 
-/// Сервис, который управляет CLLocationManager и отдаёт коллбэк при обновлении
+/// Сервис локации
 class LocationService: NSObject, CLLocationManagerDelegate {
-    var sendInterval: TimeInterval = 10        // №1 задержка между отправками
-    var lifeTime: TimeInterval   = 60
     private let manager = CLLocationManager()
+    private let ctx = PluginContext.shared;
+    override init() {
+        super.init()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.allowsBackgroundLocationUpdates = true
+        manager.pausesLocationUpdatesAutomatically = false
+    }
+
+    private(set) var isRunning = false;
+    private var timer: Timer?
+    private var lastLocation: CLLocation?
+
+        
+    func start() {
+        manager.requestAlwaysAuthorization();
+        manager.startUpdatingLocation();
+        isRunning = true;
+
+        val locationStorage =  ctx.locationStorage;
+        val tickerSeconds = locationStorage.getTickerSeconds();
+
+        tick();
+        DispatchQueue.main.async {
+            self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(tickerSeconds), repeats: true) { [weak self] _ in
+                self?.tick()
+            }
+        }
+
+    }
     
-    private var lastSent: Date = .distantPast  // для троттлинга
-    private var startedAt: Date?
-  /// коллбэк на появление новой локации
-  var onLocation: ((Double, Double) -> Void)?
+    func stop() {
+        manager.stopUpdatingLocation()
+        timer?.invalidate()
+        timer = nil
+        val locationStorage =  ctx.locationStorage;
+        locationStorage.setTickers(0);
+    }
 
-  override init() {
-    super.init()
-    manager.delegate = self
-    manager.desiredAccuracy = kCLLocationAccuracyBest
-    manager.allowsBackgroundLocationUpdates = true
-    manager.pausesLocationUpdatesAutomatically = false
-  }
+    private func tick() {
 
-  func start() {
-      manager.requestAlwaysAuthorization()
-      manager.startUpdatingLocation()
-      startedAt = Date()
-  }
+        val locationStorage =  ctx.locationStorage;
+        val lastTickers = locationStorage.getTickers();
+        if(lastTickers<=0){
+            self?.stop();
+            return;
+        }
+        locationStorage.declineOneTickers();
+        print("LocationService tick")
+        guard let loc = lastLocation else { return }
+        
+        print("LocationService tick lat "+loc.coordinate.latitude.toString())
+        print("LocationService tick lon "+loc.coordinate.longitude.toString())
 
-  func stop() {
-    manager.stopUpdatingLocation()
-  }
+    }
 
-  // MARK: CLLocationManagerDelegate
-  func locationManager(_ mgr: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
-      guard let loc = locs.last else { return }
-      guard Date().timeIntervalSince(lastSent) >= sendInterval else { return }
-      
-      if lifeTime > 0,
-            
-             let started = startedAt,
-             Date().timeIntervalSince(started) >= lifeTime {
-              stop()                                   // ← остановили менеджер
-              return
-          }
-      lastSent = Date()
+    func locationManager(_ mgr: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
+        lastLocation = locs.last;
+    }
+    
+    @discardableResult
+    static func startTracking(seconds: Int, hash: String, orderId: String) -> Bool {
+        if(isRunning){
+            print("LocationService already running")
+            return false
+        }
+        val locationStorage =  PluginContext.shared.locationStorage;
+        val tickerSeconds =  locationStorage.getTickerSeconds(); //раз в сколько секунд будет происходить тик. 
+        val tickerCount = seconds/tickerSeconds;
 
-          // #3 читаем данные из UserDefaults
-      let hash  = UserDefaults.standard.string(forKey: "hash") ?? ""
-      let secs  = UserDefaults.standard.integer(forKey: "seconds")
+        locationStorage.setTickers(tickerCount);
+        locationStorage.setHash(hash);
+        locationStorage.setOrderId(orderId);
 
-      // #4 отправляем POST
-      guard let u = URL(string: "https://webhook.site/78eb020e-58dc-4cbe-a4a9-c83af442212f") else { return }
-      var req = URLRequest(url: u)
-      req.httpMethod = "POST"
-      req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-      let body: [String: Any] = [
-        "lat": loc.coordinate.latitude,
-        "lng": loc.coordinate.longitude,
-        "hash": hash,
-        "seconds": secs
-      ]
-      req.httpBody = try? JSONSerialization.data(withJSONObject: body)
-      URLSession.shared.dataTask(with: req).resume()
-      
-  }
+        start();
+        return true
+    }
+
+    @discardableResult
+    static func stopTracking() -> Bool {
+        if(isRunning){
+            stop();
+            return true;
+        }
+        return false;
+    }
 }
+
