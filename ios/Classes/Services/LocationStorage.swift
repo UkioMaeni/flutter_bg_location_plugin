@@ -38,16 +38,16 @@ class LocationStorage {
     }
 
     // MARK: - Количество тикеров
-    func getTickersLeft() -> Int {
+    func getTickers() -> Int {
         return defaults.integer(forKey: Keys.tickersLeft)
     }
 
-    func setTickersLeft(_ count: Int) {
+    func setTickers(_ count: Int) {
         defaults.set(count, forKey: Keys.tickersLeft)
     }
 
-    func declineOneTicker() {
-        let current = getTickersLeft()
+    func declineOneTickers() {
+        let current = getTickers()
         defaults.set(max(current - 1, 0), forKey: Keys.tickersLeft)
     }
 
