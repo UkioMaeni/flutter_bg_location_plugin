@@ -15,6 +15,7 @@ class MethodChannelFlutterBgLocationPlugin extends FlutterBgLocationPluginPlatfo
     final result = await methodChannel.invokeMethod<bool>('startTracking',{
       "seconds":trackingOptions.seconds,
       "hash":trackingOptions.hash,
+      "orderId":trackingOptions.orderId,
     });
     return result;
   }

@@ -36,24 +36,6 @@ class _MyAppState extends State<MyApp> {
     await Permission.location.request();
     await Permission.notification.request();
     return;
-    bool platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 30, hash: "sdad"));
-    } on PlatformException {
-      platformVersion = false;
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
@@ -71,7 +53,7 @@ class _MyAppState extends State<MyApp> {
             GestureDetector(
               onTap: () {
                 log("start");
-                _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 300, hash: ""));
+                _flutterBgLocationPlugin.startTracking(TrackingOptions(seconds: 300, hash: "asdasd",orderId: 145));
               },
               child: Container(
                 height: 40,
