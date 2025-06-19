@@ -34,6 +34,13 @@ public class FlutterBgLocationPlugin: NSObject, FlutterPlugin {
       AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
     switch call.method {
     case "startTracking":
+        guard let args = call.arguments as? [String: Any] else { return result(false) }
+        if let h = args["hash"] as? String {                   // #3 set
+            UserDefaults.standard.setValue(h, forKey: "hash")
+        }
+        if let s = args["seconds"] as? Int {
+            UserDefaults.standard.setValue(s, forKey: "seconds")
+        }
         print("📍 startTracking")
         service.start()
         result(true)
