@@ -1,7 +1,7 @@
 import UIKit
 import Flutter
 import os.log
-
+import flutter_bg_location_plugin
 @main
 @objc class AppDelegate: FlutterAppDelegate {
   

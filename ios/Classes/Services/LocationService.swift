@@ -6,7 +6,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
 
     static let taskIdentifier = "com.example.app.locationProcessing"
 
-    static func registerBackgroundTask() {
+    public static func registerBackgroundTask() {
         PluginContext.shared.locationService = LocationService()
         BGTaskScheduler.shared.register(forTaskWithIdentifier: LocationService.taskIdentifier, using: nil) { task in
             guard let task = task as? BGProcessingTask else { return }
@@ -21,8 +21,8 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
     private var currentBGTask: BGProcessingTask?
  
 
-    init(context: PluginContext) {
-        self.ctx = context
+    override init() {
+        self.ctx = PluginContext.shared
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -33,22 +33,31 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
     private func handleBackgroundTask(task: BGProcessingTask) {
         scheduleBackgroundTask() // повторное планирование
         currentBGTask = task
+        print("handleBackgroundTask")
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
         }
         // Запрашиваем одиночную локацию
+        print("Запрашиваем одиночную локацию")
         manager.requestAlwaysAuthorization()
         manager.requestLocation()
     }
     private func scheduleBackgroundTask() {
+        print("scheduleBackgroundTask")
         let request = BGProcessingTaskRequest(identifier: LocationService.taskIdentifier)
         request.requiresNetworkConnectivity = true
         request.requiresExternalPower = false
         // Earliest next run
         let locationStorage =  ctx.locationStorage;
-        request.earliestBeginDate = Date(timeIntervalSinceNow: TimeInterval(locationStorage.getTickerSeconds()))
+        let time = Date(timeIntervalSinceNow: TimeInterval(locationStorage.getTickerSeconds()))
+        request.earliestBeginDate = time
+        let formatter = DateFormatter()
+
+        print("\(formatter.string(from: time))")
+        print("StartscheduleBackgroundTask")
         do {
             try BGTaskScheduler.shared.submit(request)
+
         } catch {
             print("Could not schedule location BG task: \(error)")
         }
@@ -102,8 +111,9 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
 
     }
 
-    func locationManager(_ mgr: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
+    public func locationManager(_ mgr: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
         //lastLocation = locs.last;
+        print("locationManager")
         guard let loc = locs.last else { return }
         sendLocation(loc)
         currentBGTask?.setTaskCompleted(success: true)
@@ -111,7 +121,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
 
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+   public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location error: \(error)")
         currentBGTask?.setTaskCompleted(success: true)
         currentBGTask = nil

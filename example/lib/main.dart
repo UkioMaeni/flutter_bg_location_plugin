@@ -55,11 +55,11 @@ class _MyAppState extends State<MyApp> {
 
   serviceStart()async{
 
-    final seconds = int.parse(secondController.text);
-    final hash = hashController.text;
-    final orderId = int.parse(orderIdController.text);
+    // final seconds = int.parse(secondController.text);
+    // final hash = hashController.text;
+    // final orderId = int.parse(orderIdController.text);
 
-   final result =  await _flutterBgLocation.locationServiceStart(TrackingOptions(seconds: seconds, hash: hash,orderId: orderId));
+   final result =  await _flutterBgLocation.locationServiceStart(TrackingOptions(seconds: 40, hash: "hash",orderId: 12));
    if(result){
     serviceIsStarted();
     serviceGetMeta();
