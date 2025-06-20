@@ -6,16 +6,13 @@ final class LocationServiceMetaHandler: Handler {
 
     func handler(call: FlutterMethodCall, result: @escaping FlutterResult) {
 
-        PluginContext.shared.
-
-        print("FlutterLocationPlugin", "startTracking invoked")
-        guard let args = call.arguments as? [String: Any] else { return result(false) }
-
-        let seconds = args?["seconds"] as? Int ?? 0;
-        let hash = args?["hash"] as? String ?? "";
-        let orderId = args?["orderId"] as? String ?? "";
-  
-        let isStarted = PluginContext.shared.locationService.startTracking(seconds, hash, orderId)       
-        result(isStarted)
+        let storage = PluginContext.shared.locationStorage;
+        let meta: [String: Any] = [
+            "tickerSeconds": storage.getTickerSeconds(),
+            "tickersCount":  storage.getTickers(),
+            "hash":          storage.getHash(),
+            "orderId":       storage.getOrderId()
+        ]    
+        result(meta)
     }
 }
