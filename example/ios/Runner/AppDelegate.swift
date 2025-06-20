@@ -11,6 +11,7 @@ import flutter_bg_location_plugin
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     LocationService.registerBackgroundTask()
+    _=VoIPPushRegistryHandler.shared
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
