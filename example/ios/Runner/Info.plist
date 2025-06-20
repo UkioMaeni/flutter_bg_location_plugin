@@ -9,6 +9,12 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
+		<string>fetch</string>
+  		<string>processing</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.example.app.locationProcessing</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Flutter debugger needs local network to open the Dart VM Service</string>

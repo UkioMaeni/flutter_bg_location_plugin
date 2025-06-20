@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     await Permission.location.request();
     await Permission.notification.request();
+    if (Platform.isIOS) {
+      await Permission.locationAlways.request();
+    }
     return;
   }
 
