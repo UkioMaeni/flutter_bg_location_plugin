@@ -49,15 +49,22 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
         request.requiresExternalPower = false
         // Earliest next run
         let locationStorage =  ctx.locationStorage;
-        let time = Date(timeIntervalSinceNow: TimeInterval(locationStorage.getTickerSeconds()))
+
+        let intervalSeconds = locationStorage.getTickerSeconds()
+        let interval = TimeInterval(intervalSeconds)
+
+        print("[LocationService] intervalSeconds (Int): \(intervalSeconds)")
+        print("[LocationService] interval (TimeInterval): \(interval)")
+
+        let time = Date(timeIntervalSinceNow: interval)
         request.earliestBeginDate = time
         let formatter = DateFormatter()
-
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         print("\(formatter.string(from: time))")
         print("StartscheduleBackgroundTask")
         do {
             try BGTaskScheduler.shared.submit(request)
-
+            print("[LocationService] BG task submitted successfully")
         } catch {
             print("Could not schedule location BG task: \(error)")
         }
