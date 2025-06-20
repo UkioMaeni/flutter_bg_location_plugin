@@ -1,6 +1,6 @@
 import  Flutter
 
-final class StartTrackingHandler: Handler {
+final class LocationServiceStartHandler: Handler {
 
     let callMethod = CallMethods.LOCATION_SERVICE_START
 

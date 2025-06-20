@@ -1,6 +1,6 @@
 import  Flutter
 
-final class StopTrackingHandler: Handler {
+final class LocationServiceStopHandler: Handler {
 
     let callMethod = CallMethods.LOCATION_SERVICE_STOP
 

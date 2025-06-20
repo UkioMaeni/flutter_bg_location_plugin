@@ -12,8 +12,8 @@ final class PluginContext {
     var channel: FlutterMethodChannel!
 
     var handlers: [Handler] = [
-        StartTrackingHandler(),
-        StopTrackingHandler(),
+        LocationServiceStartHandler(),
+        LocationServiceStopHandler(),
         LocationServiceStatusHandler(),
         LocationServiceMetaHandler()
     ]
