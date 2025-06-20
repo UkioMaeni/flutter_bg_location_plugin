@@ -3,8 +3,9 @@ import CoreLocation
 /// Сервис локации
 class LocationService: NSObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
-    private let ctx = PluginContext.shared;
-    override init() {
+    private unowned let ctx: PluginContext 
+    init(context: PluginContext) {
+        self.ctx = context
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -38,7 +39,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
         timer?.invalidate()
         timer = nil
-        val locationStorage =  ctx.locationStorage;
+        let locationStorage =  ctx.locationStorage;
         locationStorage.setTickers(0);
     }
 
@@ -47,7 +48,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         let locationStorage =  ctx.locationStorage;
         let lastTickers = locationStorage.getTickers();
         if(lastTickers<=0){
-            self?.stop();
+            stop();
             return;
         }
         if(countering){
@@ -56,8 +57,8 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         print("LocationService tick")
         guard let loc = lastLocation else { return }
         
-        print("LocationService tick lat "+loc.coordinate.latitude.toString())
-        print("LocationService tick lon "+loc.coordinate.longitude.toString())
+        print("LocationService tick lat \(loc.coordinate.latitude)")
+        print("LocationService tick lon \(loc.coordinate.longitude)")
 
     }
 

@@ -2,11 +2,13 @@ import  Flutter
 
 final class PluginContext {
     static let shared = PluginContext()        
-    private init() {}
+    private init() {
+
+    }
 
     // всё, что нужно хендлерам
-    let locationService = LocationService()
-    let locationStorage = LocationStorage()
+    lazy var locationService = LocationService(context: self)
+    let locationStorage = LocationStorage.shared
     var channel: FlutterMethodChannel!
 
     var handlers: [Handler] = [
@@ -18,7 +20,7 @@ final class PluginContext {
 
     func handleMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let handler = handlers.first(where: { $0.callMethod == call.method }) {
-            handler.handle(context: self, call: call, result: result)
+            handler.handler(call: call, result: result)
         } else {
             result(FlutterMethodNotImplemented)
         }
