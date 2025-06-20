@@ -2,7 +2,7 @@ import  Flutter
 
 final class StartTrackingHandler: Handler {
 
-    let callMethod = "startTracking"
+    let callMethod = CallMethods.LOCATION_SERVICE_START
 
     func handler(call: FlutterMethodCall, result: @escaping FlutterResult) {
         print("FlutterLocationPlugin", "startTracking invoked")

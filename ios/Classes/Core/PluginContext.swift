@@ -11,7 +11,9 @@ final class PluginContext {
 
     var handlers: [Handler] = [
         StartTrackingHandler(),
-        StopTrackingHandler()
+        StopTrackingHandler(),
+        LocationServiceStatusHandler(),
+        LocationServiceMetaHandler()
     ]
 
     func handleMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

@@ -8,3 +8,4 @@ interface Handler {
     val callMethod:String;
     fun handler(context: Context, call: MethodCall, result: MethodChannel.Result);
 }
+

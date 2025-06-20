@@ -24,10 +24,16 @@ abstract class FlutterBgLocationPluginPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<bool?> startTracking(TrackingOptions trackingOptions) {
+  Future<bool?> locationServiceStart(TrackingOptions trackingOptions) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
-  Future<bool?> stopTracking() {
+  Future<bool?> locationServiceStop() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+  Future<bool?> locationServiceStatus() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+  Future<Map<String, dynamic>?> locationServiceMeta() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 }

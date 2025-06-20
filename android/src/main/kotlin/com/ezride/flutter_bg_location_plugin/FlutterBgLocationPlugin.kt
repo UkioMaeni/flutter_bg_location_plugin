@@ -34,10 +34,12 @@ class FlutterBgLocationPlugin: FlutterPlugin, MethodChannel.MethodCallHandler{
     }
 
     private val handlers: List<Handler> = listOf(
-        StartTrackingHandler(),
-        StopTrackingHandler()
+        LocationServiceStartHandler(),
+        LocationServiceStopHandler(),
+        LocationServiceStatusHandler(),
+        LocationServiceMetaHandler()
     )
-    
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 
         handlers.find { it.callMethod == call.method }

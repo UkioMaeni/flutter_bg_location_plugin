@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bg_location_plugin/constants/method_names.dart';
 import 'package:flutter_bg_location_plugin/models/traking_options.dart';
 
 import 'flutter_bg_location_plugin_platform_interface.dart';
@@ -11,8 +12,8 @@ class MethodChannelFlutterBgLocationPlugin extends FlutterBgLocationPluginPlatfo
   final methodChannel = const MethodChannel('flutter_bg_location_plugin');
 
   @override
-  Future<bool?> startTracking(TrackingOptions trackingOptions) async {
-    final result = await methodChannel.invokeMethod<bool>('startTracking',{
+  Future<bool?> locationServiceStart(TrackingOptions trackingOptions) async {
+    final result = await methodChannel.invokeMethod<bool>(ChannelMethods.LOCATION_SERVICE_START,{
       "seconds":trackingOptions.seconds,
       "hash":trackingOptions.hash,
       "orderId":trackingOptions.orderId,
@@ -20,8 +21,19 @@ class MethodChannelFlutterBgLocationPlugin extends FlutterBgLocationPluginPlatfo
     return result;
   }
   @override
-  Future<bool?> stopTracking() async {
-    final result = await methodChannel.invokeMethod<bool>('stopTracking');
+  Future<bool?> locationServiceStop() async {
+    final result = await methodChannel.invokeMethod<bool>(ChannelMethods.LOCATION_SERVICE_STOP);
     return result;
+  }
+  @override
+  Future<bool?> locationServiceStatus() async {
+    final result = await methodChannel.invokeMethod<bool>(ChannelMethods.LOCATION_SERVICE_STATUS);
+    return result;
+  }
+  @override
+  Future<Map<String, dynamic>?> locationServiceMeta() async {
+    final result = await methodChannel.invokeMethod<Map<Object?,Object?>>(ChannelMethods.LOCATION_SERVICE_META);
+    print(result.toString());
+    return result?.cast<String, dynamic>();
   }
 }

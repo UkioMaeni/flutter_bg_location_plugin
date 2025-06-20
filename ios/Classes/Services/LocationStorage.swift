@@ -61,11 +61,11 @@ class LocationStorage {
     }
 
     // MARK: - ID ордера
-    func getOrderId() -> String {
-        return defaults.string(forKey: Keys.tickerId) ?? ""
+    func getOrderId() -> Int {
+        return defaults.integer(forKey: Keys.orderId) ?? 0
     }
 
-    func setOrderId(_ id: String) {
-        defaults.set(id, forKey: Keys.tickerId)
+    func setOrderId(_ id: Int) {
+        defaults.set(id, forKey: Keys.orderId)
     }
 }

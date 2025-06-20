@@ -2,7 +2,7 @@ import  Flutter
 
 final class StopTrackingHandler: Handler {
 
-    let callMethod = "stopTracking"
+    let callMethod = CallMethods.LOCATION_SERVICE_STOP
 
     func handler(call: FlutterMethodCall, result: @escaping FlutterResult) {
         print("FlutterLocationPlugin", "stopTracking invoked")

@@ -29,10 +29,14 @@ class LocationUpdatesService : Service() {
     override fun onCreate() {
         super.onCreate()
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedClient.lastLocation.addOnSuccessListener { loc ->
-            if (loc != null) Log.d("LocationService", "LastLocation: $loc")
-                else Log.d("LocationService", "LastLocation == null")
-            }
+        // fusedClient.lastLocation.addOnSuccessListener { loc ->
+        //     if (loc != null){
+        //         Log.d("LocationService", "LastLocation: $loc")
+        //         HttpService.sendLocation(loc.latitude, loc.longitude,hash);
+        //     }else{
+        //         Log.d("LocationService", "LastLocation == null")
+        //     } 
+        // }
         val serviceContext = this;
         val locationStorage = LocationStorage(serviceContext);
 
@@ -88,8 +92,26 @@ class LocationUpdatesService : Service() {
             .build()
     }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         Log.d("LocationService", "onStartCommand() called")
-        return super.onStartCommand(intent, flags, startId)
+        when (intent?.action) {
+            ACTION_START -> {
+                // мгновенная отправка из кэша
+                fusedClient.lastLocation.addOnSuccessListener { loc ->
+                    loc?.let {
+                        val storage = LocationStorage(this)
+                        val hash = storage.getHash() ?: ""
+                        HttpService.sendLocation(it.latitude, it.longitude, hash)
+                    }
+                }
+            }
+            ACTION_STOP -> {
+            }
+            else -> {
+                // при повторном onStartCommand без action можно ничего не делать
+            }
+        }
+        return START_STICKY
     }
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -124,8 +146,10 @@ class LocationUpdatesService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     companion object {
-        const val ACTION_LOCATION = "com.ezride.flutter_location_plugin.services.ACTION_LOCATION"
-        const val EXTRA_LAT = "latitude"
-        const val EXTRA_LNG = "longitude"
+        const val ACTION_LOCATION   = "com.ezride.flutter_location_plugin.services.ACTION_LOCATION"
+        const val ACTION_START      = "com.ezride.flutter_location_plugin.services.ACTION_START"
+        const val ACTION_STOP       = "com.ezride.flutter_location_plugin.services.ACTION_STOP"
+        const val EXTRA_LAT         = "latitude"
+        const val EXTRA_LNG         = "longitude"
     }
 }

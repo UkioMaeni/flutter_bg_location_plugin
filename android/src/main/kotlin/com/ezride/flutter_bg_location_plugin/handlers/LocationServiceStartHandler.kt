@@ -7,10 +7,10 @@ import android.content.Intent
 import android.util.Log
 import com.ezride.flutter_bg_location_plugin.services.LocationService
 
-class StartTrackingHandler : Handler{
+class LocationServiceStartHandler : Handler{
 
 
-    override val callMethod : String ="startTracking";
+    override val callMethod : String = CallMethods.LOCATION_SERVICE_START;
 
     override fun handler(context: Context, call: MethodCall, result: MethodChannel.Result){
         Log.d("FlutterLocationPlugin", "startTracking invoked")
@@ -18,7 +18,7 @@ class StartTrackingHandler : Handler{
         val args = call.arguments as? Map<*, *>
         val seconds = (args?.get("seconds") as? Int) ?: 0;
         val hash = (args?.get("hash") as? String) ?: "";
-        val orderId = (args?.get("orderId") as? String) ?: "";
+        val orderId = (args?.get("orderId") as? Int) ?: 0;
         val isStarted =  LocationService.startTracking(context,seconds,hash,orderId);
         result.success(isStarted);
 

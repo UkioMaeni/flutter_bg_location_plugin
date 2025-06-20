@@ -25,10 +25,10 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         let locationStorage =  ctx.locationStorage;
         let tickerSeconds = locationStorage.getTickerSeconds();
 
-        tick();
+        tick(countering: false);
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(tickerSeconds), repeats: true) { [weak self] _ in
-                self?.tick()
+                self?.tick(countering: true)
             }
         }
 
@@ -42,7 +42,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         locationStorage.setTickers(0);
     }
 
-    private func tick() {
+    private func tick(countering: Bool) {
 
         let locationStorage =  ctx.locationStorage;
         let lastTickers = locationStorage.getTickers();
@@ -50,7 +50,9 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             self?.stop();
             return;
         }
-        locationStorage.declineOneTickers();
+        if(countering){
+            locationStorage.declineOneTickers();
+        }
         print("LocationService tick")
         guard let loc = lastLocation else { return }
         
