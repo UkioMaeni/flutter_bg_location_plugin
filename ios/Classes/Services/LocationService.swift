@@ -45,7 +45,8 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
         request.requiresNetworkConnectivity = true
         request.requiresExternalPower = false
         // Earliest next run
-        request.earliestBeginDate = Date(timeIntervalSinceNow: TimeInterval(storage.getTickerSeconds()))
+        let locationStorage =  ctx.locationStorage;
+        request.earliestBeginDate = Date(timeIntervalSinceNow: TimeInterval(locationStorage.getTickerSeconds()))
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
@@ -103,7 +104,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ mgr: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
         //lastLocation = locs.last;
-        guard let loc = locations.last else { return }
+        guard let loc = locs.last else { return }
         sendLocation(loc)
         currentBGTask?.setTaskCompleted(success: true)
         currentBGTask = nil
@@ -119,6 +120,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
     private func sendLocation(_ loc: CLLocation) {
         print("LocationService tick lat \(loc.coordinate.latitude)")
         print("LocationService tick lon \(loc.coordinate.longitude)")
+        let storage =  ctx.locationStorage;
         let remaining = storage.getTickers()
         guard remaining > 0 else {
             stopTracking()
