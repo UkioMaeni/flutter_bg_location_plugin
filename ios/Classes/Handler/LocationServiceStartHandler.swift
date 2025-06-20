@@ -10,7 +10,7 @@ final class LocationServiceStartHandler: Handler {
 
         let seconds = args["seconds"] as? Int ?? 0;
         let hash = args["hash"] as? String ?? "";
-        let orderId = args["orderId"] as? String ?? "";
+        let orderId = args["orderId"] as? Int ?? 0;
   
         let isStarted = PluginContext.shared.locationService.startTracking(seconds:seconds, hash:hash, orderId:orderId)       
         result(isStarted)

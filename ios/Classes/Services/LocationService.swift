@@ -67,7 +67,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     }
     
     @discardableResult
-    func startTracking(seconds: Int, hash: String, orderId: String) -> Bool {
+    func startTracking(seconds: Int, hash: String, orderId: Int) -> Bool {
         if(isRunning){
             print("LocationService already running")
             return false
