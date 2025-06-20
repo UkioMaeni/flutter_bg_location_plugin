@@ -57,7 +57,7 @@ public class LocationService: NSObject, CLLocationManagerDelegate {
         print("[LocationService] interval (TimeInterval): \(interval)")
 
         let time = Date(timeIntervalSinceNow: interval)
-        request.earliestBeginDate = time
+        //request.earliestBeginDate = time
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         print("\(formatter.string(from: time))")
