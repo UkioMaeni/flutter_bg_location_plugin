@@ -10,6 +10,7 @@ import os.log
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+    LocationService.registerBackgroundTask()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

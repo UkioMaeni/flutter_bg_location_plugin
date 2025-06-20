@@ -1,12 +1,25 @@
 import CoreLocation
 import BackgroundTasks
+import UIKit
 /// Сервис локации
-class LocationService: NSObject, CLLocationManagerDelegate {
+public class LocationService: NSObject, CLLocationManagerDelegate {
+
+    static let taskIdentifier = "com.example.app.locationProcessing"
+
+    static func registerBackgroundTask() {
+        PluginContext.shared.locationService = LocationService()
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: LocationService.taskIdentifier, using: nil) { task in
+            guard let task = task as? BGProcessingTask else { return }
+            // Передаём задачу в сервис для обработки
+            PluginContext.shared.locationService?.handleBackgroundTask(task: task)
+        }
+    }
+
     private let manager = CLLocationManager()
     private unowned let ctx: PluginContext
 
     private var currentBGTask: BGProcessingTask?
-    private let taskIdentifier = "com.example.app.locationProcessing" 
+ 
 
     init(context: PluginContext) {
         self.ctx = context
@@ -15,9 +28,6 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.allowsBackgroundLocationUpdates = true
         manager.pausesLocationUpdatesAutomatically = false
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: taskIdentifier, using: nil) { [weak self] task in
-            self?.handleBackgroundTask(task: task as! BGProcessingTask)
-        }
     }
 
     private func handleBackgroundTask(task: BGProcessingTask) {
@@ -31,7 +41,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         manager.requestLocation()
     }
     private func scheduleBackgroundTask() {
-        let request = BGProcessingTaskRequest(identifier: taskIdentifier)
+        let request = BGProcessingTaskRequest(identifier: LocationService.taskIdentifier)
         request.requiresNetworkConnectivity = true
         request.requiresExternalPower = false
         // Earliest next run
@@ -140,7 +150,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
 
     @discardableResult
     func stopTracking() -> Bool {
-        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: taskIdentifier)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: LocationService.taskIdentifier)
         return true;
         // if(isRunning){
         //     stop();
